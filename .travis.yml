@@ -1,0 +1,20 @@
+sudo: required 
+services:
+    -docker
+
+before_install:
+    - docker build -t shriramgaddam/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run shriramgaddam/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t shriramgaddam/multi-client ./client
+    - docker build -t shriramgaddam/multi-server ./server
+    - docker build -t shriramgaddam/multi-nginx ./nginx
+    - docker build -t shriramgaddam/multi-worker ./worker
+
+
+# login in to the cli and push those built images
+
+# into the docker hub
